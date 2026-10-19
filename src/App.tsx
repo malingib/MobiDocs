@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import PdfWorkspace from './PdfWorkspace'
 import { ArrowDownToLine, ArrowRight, Check, ChevronDown, FileImage, FileSearch, FileText, Files, Image, LockKeyhole, Menu, ScanText, ShieldCheck, Sparkles, Upload, X } from 'lucide-react'
 
 type Tool = { id: string; title: string; description: string; icon: typeof FileText; tag?: string }
@@ -89,7 +90,8 @@ export default function App() {
               </button>
             })}
           </div>
-          {selectedTool && <div className="tool-notice"><div className="notice-icon"><Sparkles size={19} /></div><div><strong>{selectedTool.title}</strong><p>{file ? `Selected file: ${file.name}. The dedicated ${selectedTool.title.toLowerCase()} workflow is the next implementation step.` : 'Choose a file to continue. The dedicated editing workflow is being built.'}</p></div><button className="icon-button" aria-label="Close tool notice" onClick={() => setActiveTool('')}><X size={17} /></button></div>}
+          {selectedTool?.id === 'pdf-edit' && file && file.name.toLowerCase().endsWith('.pdf') && <PdfWorkspace file={file} onClose={() => setActiveTool('')} />}
+          {selectedTool && !(selectedTool.id === 'pdf-edit' && file && file.name.toLowerCase().endsWith('.pdf')) && <div className="tool-notice"><div className="notice-icon"><Sparkles size={19} /></div><div><strong>{selectedTool.title}</strong><p>{!file ? 'Choose a file to continue.' : selectedTool.id === 'pdf-edit' ? 'This first editor workflow works with PDF files. Choose a PDF to view, rotate, remove pages and export.' : `Selected file: ${file.name}. The ${selectedTool.title.toLowerCase()} workflow is queued for the next implementation stage.`}</p></div><button className="icon-button" aria-label="Close tool notice" onClick={() => setActiveTool('')}><X size={17} /></button></div>}
         </section>
 
         <section id="how-it-works" className="how-section">
