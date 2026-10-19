@@ -69,7 +69,7 @@ export default function PdfWorkspace({ file, onClose }: Props) {
       canvas.style.width = `${viewport.width}px`
       canvas.style.height = `${viewport.height}px`
       context.setTransform(ratio, 0, 0, ratio, 0, 0)
-      await page.render({ canvasContext: context, canvas, viewport, canvas: canvas as HTMLCanvasElement }).promise
+      await page.render({ canvasContext: context, viewport }).promise
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Unable to render this page.')
     } finally {
