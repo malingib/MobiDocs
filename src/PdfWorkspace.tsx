@@ -105,13 +105,13 @@ export default function PdfWorkspace({ file, onClose }: Props) {
     try {
       const source = await file.arrayBuffer()
       const output = await PDFDocument.load(source)
-      const removeIndexes = pages.filter((page) => page.deleted).map((page) => page.pageNumber - 1).sort((a, b) => b - a)
-      removeIndexes.forEach((index) => output.removePage(index))
       for (const page of pages.filter((item) => !item.deleted && item.rotation !== 0)) {
         const target = output.getPage(page.pageNumber - 1)
         const existing = target.getRotation().angle
         target.setRotation(degrees((existing + page.rotation) % 360))
       }
+      const removeIndexes = pages.filter((page) => page.deleted).map((page) => page.pageNumber - 1).sort((a, b) => b - a)
+      removeIndexes.forEach((index) => output.removePage(index))
       const bytes = await output.save()
       const blob = new Blob([bytes as BlobPart], { type: 'application/pdf' })
       const url = URL.createObjectURL(blob)
